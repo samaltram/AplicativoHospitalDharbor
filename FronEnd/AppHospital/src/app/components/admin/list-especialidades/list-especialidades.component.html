@@ -1,0 +1,74 @@
+<div class="row mt-5" *ngIf="!swEdit">
+    <h1 class="titulo">ESPECIALIDADES</h1>
+    <div class="col">
+      <button type="button" class="btn btn-primary float-right mb-3"
+          (click)="resetForm()">Nueva</button>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col">Icono</th>
+            <th scope="col">Creado Por</th>
+            <th scope="col">Fecha Creacion</th>
+            <th scope="col">Modificado Por</th>
+            <th scope="col">Fecha Modificacion</th>
+            <th scope="col">&nbsp;</th>
+            <th scope="col">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of especialidades | paginate: { itemsPerPage: 7, currentPage: pageActual}; let i = index">
+            <th scope="row"> {{i+1}}</th>
+            <td>{{data.nombre}}</td>
+            <td>{{data.descripcion}}</td>
+            <td>{{data.icono}}</td>
+            <td>{{data.creadoPor}}</td>
+            <td>{{data.fechaCreacion | date:'MM-dd-yyyy' }}</td>
+            <td>{{data.modificadoPor}}</td>
+            <td>{{data.fechaModificacion | date:'MM-dd-yyyy'}}</td>
+            <td>
+              <button class="btn btn-primary" (click)="onPreUpdate(data)" data-bs-toggle="modal" data-bs-target="#modalHosp">Mod.
+              </button>
+            </td>
+            <td>
+              <a href="/admin/especialidades" class="btn btn-danger" (click)="onDelete(data.idHospital)">Borrar</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination-controls class="content" (pageChange)="pageActual = $event"></pagination-controls>
+    </div>
+  </div>
+
+  <!-- Otra Ventana -->
+  <div class="row mt-5" *ngIf="swEdit">
+  <div class="card">
+      <div>
+    <h2 class="titulo2" *ngIf="!selected.idEspecialidad" > NUEVA ESPECIALIDAD</h2>
+    <h2 class="titulo2" *ngIf="selected.idEspecialidad"> MODIFICACION DE ESPECIALIDAD</h2>
+    <button class="btn btn-danger close" (click)="onSalir();">X</button>
+</div>
+    <form class="form Espe" #frmEspe="ngForm" (ngSubmit)="onSave(frmEspe)">
+      <div class="form-group">
+        <label for="idEspecialidad">Codigo Especailidad</label>
+        <input type="text" id="idEspecialidad" name="idEspecialidad" class="form-control"
+               [(ngModel)]="selected.idEspecialidad" disabled = "true">
+      </div>
+      <div class="form-group">
+        <label for="nombre">Nombre Especailidad</label>
+        <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre"
+               [(ngModel)] = "selected.nombre" ngModel required="true">
+       <label for="descripcion">Descripcion</label>
+       <input type="text" id="descripcion" name="descripcion" class="form-control" placeholder="Descripcion"
+               [(ngModel)] = "selected.descripcion" ngModel required="true">
+       <label for="icono">Icono</label>
+       <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre"
+              [(ngModel)] = "selected.icono" ngModel required="true">
+      </div>
+      <button type="submit" class="btn btn-primary footer">Guardar</button>
+    </form>
+
+  </div>
+</div>

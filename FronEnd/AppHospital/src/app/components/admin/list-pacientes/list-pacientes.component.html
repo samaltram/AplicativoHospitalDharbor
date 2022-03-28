@@ -1,0 +1,83 @@
+<div class="row mt-5" *ngIf="!swEdit">
+    <h1 class="titulo">PACIENTES</h1>
+    <div class="col">
+      <button type="button" class="btn btn-primary float-right mb-3"
+          (click)="resetForm()">Nueva</button>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nombres</th>
+            <th scope="col">Apellidos</th>
+            <th scope="col">Fecha de Nacimiento</th>
+            <th scope="col">Direccion</th>
+            <th scope="col">Foto</th>
+            <th scope="col">Creado Por</th>
+            <th scope="col">Fecha Creacion</th>
+            <th scope="col">Modificado Por</th>
+            <th scope="col">Fecha Modificacion</th>
+            <th scope="col">&nbsp;</th>
+            <th scope="col">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of pacientes | paginate: { itemsPerPage: 7, currentPage: pageActual}; let i = index">
+            <th scope="row"> {{i+1}}</th>
+            <td>{{data.nombres}}</td>
+            <td>{{data.apellidos}}</td>
+            <td>{{data.fechaNacimiento}}</td>
+            <td>{{data.direccion}}</td>
+            <td>{{data.foto}}</td>
+            <td>{{data.creadoPor}}</td>
+            <td>{{data.fechaCreacion | date:'MM-dd-yyyy' }}</td>
+            <td>{{data.modificadoPor}}</td>
+            <td>{{data.fechaModificacion | date:'MM-dd-yyyy'}}</td>
+            <td>
+              <button class="btn btn-primary" (click)="onPreUpdate(data)" data-bs-toggle="modal" data-bs-target="#modalHosp">Mod.
+              </button>
+            </td>
+            <td>
+              <a href="/admin/pacientes" class="btn btn-danger" (click)="onDelete(data.idHospital)">Borrar</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination-controls class="content" (pageChange)="pageActual = $event"></pagination-controls>
+    </div>
+  </div>
+
+  <!-- Otra Ventana -->
+  <div class="row mt-5" *ngIf="swEdit">
+  <div class="card">
+    <div>
+    <h2 class="titulo2" *ngIf="!selected.idPaciente" > NUEVO PACIENTE</h2>
+    <h2 class="titulo2" *ngIf="selected.idPaciente"> MODIFICACION DE PACIENTE</h2>
+    <button class="btn btn-danger close" (click)="onSalir();">X</button>
+    </div>
+    <form class="form Espe" #frmEspe="ngForm" (ngSubmit)="onSave(frmEspe)">
+      <div class="form-group">
+        <label for="idPaciente">Codigo Paciente</label>
+        <input type="text" id="idPaciente" name="idPaciente" class="form-control"
+               [(ngModel)]="selected.idPaciente" disabled = "true">
+      </div>
+      <div class="form-group">
+        <label for="nombres">Nombres</label>
+        <input type="text" id="nombres" name="nombres" class="form-control" placeholder="Nombres"
+               [(ngModel)] = "selected.nombres" ngModel required="true">
+       <label for="apellidos">Apellidos</label>
+       <input type="text" id="apellidos" name="apellidos" class="form-control" placeholder="Apellidos"
+               [(ngModel)] = "selected.apellidos" ngModel required="true">
+       <label for="fechaNacimiento">Fecha de Nacimiento</label>
+       <input type="date" id="fechaNacimiento" name="fechaNacimiento" class="form-control" placeholder="MM-dd-aaaa"
+              [(ngModel)] = "selected.fechaNacimiento" ngModel required="true">
+       <label for="direccion">Direccion</label>
+       <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Direccion"
+              [(ngModel)] = "selected.direccion" ngModel required="true">
+       <label for="foto">Fecha de Nacimiento</label>
+       <input type="text" id="foto" name="foto" class="form-control" placeholder="Foto"
+              [(ngModel)] = "selected.foto" ngModel required="true">
+      </div>
+      <button type="submit" class="btn btn-primary footer">Guardar</button>
+    </form>
+  </div>
+</div>

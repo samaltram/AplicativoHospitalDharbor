@@ -1,0 +1,68 @@
+
+<mat-toolbar class="mat-elevation-z8">
+  <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
+      <mat-icon *ngIf="!sidenav.opened">
+          menu
+      </mat-icon>
+      <mat-icon *ngIf="sidenav.opened">
+          close
+      </mat-icon>
+  </button>
+  Aplicativo de Hospitales
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
+<!--
+      <img class="avatar mat-elevation-z8" src="https://cdn.icon-icons.com/icons2/1465/PNG/512/588hospital_100778.png" 
+      routerLink="/admin/hospitales"/> -->
+      <img class="avatar mat-elevation-z8" src="/src/assets/IconoHospital.png" 
+      routerLink="/admin/hospitales"/>
+      <h4 class="name">Hospitales</h4>
+      <p class="designation">La Paz - Bolivia</p>
+
+      <mat-divider></mat-divider>
+      <div *ngIf="isLogin()">
+      <a mat-button class="menu-button2" routerLink="/admin/hospitales">
+          <mat-icon>home</mat-icon>
+          <span>Hospitales</span>
+      </a>
+      <a mat-button class="menu-button2" routerLink="/admin/especialidades">
+          <mat-icon>ballot</mat-icon>
+          <span>Especialidades</span>
+      </a>
+      <a mat-button class="menu-button2" routerLink="/admin/doctores">
+          <mat-icon>person</mat-icon>
+          <span>Doctores</span>
+      </a>
+      <a mat-button class="menu-button2" routerLink="/admin/pacientes">
+        <mat-icon>person_outline</mat-icon>
+        <span>Pacientes</span>
+      </a>
+
+    <mat-divider></mat-divider>
+
+    <a mat-button class="menu-button2" routerLink="/admin/historias">
+          <mat-icon>assignment</mat-icon>
+          <span>Notas de visitas</span>
+    </a>
+
+    <mat-divider></mat-divider>
+    <a mat-button class="menu-button2" routerLink="" (click)="onLogOut()">
+      <mat-icon>backspace</mat-icon>
+      <span>Logout</span>
+    </a>
+    </div>
+    <div *ngIf="!isLogin()">
+      <a mat-button class="menu-button2" routerLink="/user/login">
+        <mat-icon>verified_user</mat-icon>
+        <span>Login</span>
+      </a>
+    </div>  
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="content mat-elevation-z8">
+        <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,96 @@
+<div class="row mt-5" *ngIf="!swEdit">
+    <h1 titulo class="titulo">HISTORIAS</h1>
+    <div class="col">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Doctor</th>
+            <th scope="col">Paciente</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Creado Por</th>
+            <th scope="col">Fecha Creacion</th>
+            <th scope="col">Modificado Por</th>
+            <th scope="col">Fecha Modificacion</th>
+            <th scope="col">&nbsp;</th>
+            <th scope="col">
+              <button type="button" class="btn btn-primary float-right mb-3" (click)="resetForm()">Nuevo</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let hisPas of historiaPaciente | paginate: { itemsPerPage: 7, currentPage: pageActual}; let i = index">
+            <th scope="row"> {{i+1}}</th>
+            <td>{{hisPas.doctor.nombres}}</td>
+            <td>{{hisPas.paciente.nombres}}</td>
+            <td>{{hisPas.descripcion}}</td>
+            <td>{{hisPas.fecha | date:'MM-dd-yyyy'}}</td>
+
+            <td>{{hisPas.creadoPor}}</td>
+            
+            <td>{{hisPas.fechaCreacion | date:'MM-dd-yyyy' }}</td>
+            <td>{{hisPas.modificadoPor}}</td>
+            <td>{{hisPas.fechaModificacion | date:'MM-dd-yyyy'}}</td>
+            <td>
+              <button class="btn btn-primary" (click)="onPreUpdate(hisPas)" data-bs-toggle="modal"
+                data-bs-target="#modalHosp">Mod.</button>
+            </td>
+            <td>
+              <a href="/admin/hospitales" class="btn btn-danger" (click)="onDelete(hisPas.idHistoriaPaciente)">Borrar</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination-controls class="content" (pageChange)="pageActual = $event"></pagination-controls>
+    </div>
+  </div>
+
+<!-- Otra Ventana -->
+<div class="row mt-5" *ngIf="swEdit">
+  <div class="card">
+    <div>
+      <h2 class="titulo2" *ngIf="!selected.idHistorialPaciente"> NUEVO HISTORIA</h2>
+      <h2 class="titulo2" *ngIf="selected.idHistorialPaciente"> MODIFICACION DE DOCTOR</h2>
+      <button class="btn btn-danger close" (click)="onSalir();">X</button>
+    </div>
+    <form class="form His" #frmHist="ngForm" (ngSubmit)="onSave(frmHist)">
+      <div class="form row">
+        <div class="form-group col-md-6">
+          <label for="idHistorialPaciente">Codigo Historia</label>
+          <input type="text" id="idHistorialPaciente" name="idHistorialPaciente" class="form-control" [(ngModel)]="selected.idHistorialPaciente"
+            disabled="true">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="doctor">Doctor</label>
+          <select id="doctor" name="doctor" class="form-control" [(ngModel)]="selected.doctor" >
+            <option *ngFor="let doc of doctores" [ngValue]="doc">{{doc.nombres}} {{doc.apellidos}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form row">
+        <div class="form-group col-md-6">
+          <label for="paciente">Paciente</label>
+          <select id="paciente" name="paciente" class="form-control" [(ngModel)]="selected.paciente" >
+            <option *ngFor="let pas of pacientes" [ngValue]="pas">{{pas.nombres}} {{pas.apellidos}}</option>
+          </select>
+          
+        </div>
+        <div class="form-group col-md-6">
+          <label for="fecha">Fecha</label>
+          <input type="date" id="fecha" name="fecha" class="form-control" placeholder="MM-dd-aaaa"
+            [(ngModel)]="selected.fecha" ngModel required="true">
+
+        </div>
+      </div>
+      <div class="form row">
+        <div class="form-group">
+          <label for="descripcion">Descripcion</label>
+          <input type="text" id="descripcion" name="descripcion" class="form-control" placeholder="Descripcion"
+            [(ngModel)]="selected.descripcion" ngModel required="true">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary footer">Guardar</button>
+    </form>
+  </div>
+</div>

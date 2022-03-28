@@ -1,0 +1,142 @@
+<div class="row mt-5" *ngIf="!swEdit">
+  <h1 class="titulo">DOCTORES</h1>
+  <div class="col">
+    
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nombres</th>
+          <th scope="col">Apellidos</th>
+          <th scope="col">Fecha de Nacimiento</th>
+          <th scope="col">Direccion</th>
+          <th scope="col">Foto</th>
+          <th scope="col">Creado Por</th>
+          <th scope="col">Fecha Creacion</th>
+          <th scope="col">Modificado Por</th>
+          <th scope="col">Fecha Modificacion</th>
+          <th scope="col">&nbsp;</th>
+          <th scope="col"><button type="button" class="btn btn-primary float-right mb-3" (click)="resetForm()">Nueva</button></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of doctores | paginate: { itemsPerPage: 7, currentPage: pageActual}; let i = index">
+          <th scope="row"> {{i+1}}</th>
+          <td>{{data.nombres}}</td>
+          <td>{{data.apellidos}}</td>
+          <td>{{data.fechaNacimiento}}</td>
+          <td>{{data.direccion}}</td>
+          <td>{{data.foto}}</td>
+          <td>{{data.creadoPor}}</td>
+          <td>{{data.fechaCreacion | date:'MM-dd-yyyy' }}</td>
+          <td>{{data.modificadoPor}}</td>
+          <td>{{data.fechaModificacion | date:'MM-dd-yyyy'}}</td>
+          <td>
+            <button class="btn btn-primary" (click)="onPreUpdate(data)" data-bs-toggle="modal"
+              data-bs-target="#modalHosp">Mod.
+            </button>
+          </td>
+          <td>
+            <a href="/admin/doctores" class="btn btn-danger" (click)="onDelete(data.idHospital)">Borrar</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls class="content" (pageChange)="pageActual = $event"></pagination-controls>
+  </div>
+</div>
+
+<!-- Otra Ventana -->
+<div class="row mt-5" *ngIf="swEdit">
+  <div class="card">
+    <div>
+      <h2 class="titulo2" *ngIf="!selected.idDoctor"> NUEVO DOCTOR</h2>
+      <h2 class="titulo2" *ngIf="selected.idDoctor"> MODIFICACION DE DOCTOR</h2>
+      <button class="btn btn-danger close" (click)="onSalir();">X</button>
+    </div>
+    <form class="form Espe" #frmEspe="ngForm" (ngSubmit)="onSave(frmEspe)">
+      <div class="form row">
+        <div class="form-group col-md-6">
+          <label for="idDoctor">Codigo Doctor</label>
+          <input type="text" id="idDoctor" name="idDoctor" class="form-control" [(ngModel)]="selected.idDoctor"
+            disabled="true">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="nombres">Nombres</label>
+          <input type="text" id="nombres" name="nombres" class="form-control" placeholder="Nombres"
+            [(ngModel)]="selected.nombres" ngModel required="true">
+        </div>
+      </div>
+      <div class="form row">
+        <div class="form-group col-md-6">
+          <label for="apellidos">Apellidos</label>
+          <input type="text" id="apellidos" name="apellidos" class="form-control" placeholder="Apellidos"
+            [(ngModel)]="selected.apellidos" ngModel required="true">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="fechaNacimiento">Fecha de Nacimiento</label>
+          <input type="date" id="fechaNacimiento" name="fechaNacimiento" class="form-control" placeholder="MM-dd-aaaa"
+            [(ngModel)]="selected.fechaNacimiento" ngModel required="true">
+
+        </div>
+      </div>
+      <div class="form row">
+        <div class="form-group col-md-6">
+          <label for="direccion">Direccion</label>
+          <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Direccion"
+            [(ngModel)]="selected.direccion" ngModel required="true">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="foto">Foto</label>
+          <input type="text" id="foto" name="foto" class="form-control" placeholder="Foto" [(ngModel)]="selected.foto"
+            ngModel required="true">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary footer">Guardar</button>
+    </form>
+    <div *ngIf="selected.idDoctor">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Especialidades</th>
+            <th scope="col">Creado Por</th>
+            <th scope="col">Fecha Creacion</th>
+            <th scope="col">Modificado Por</th>
+            <th scope="col">Fecha Modificacion</th>
+            <th scope="col">&nbsp;</th>
+            <th scope="col">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let docEsp of doctoresEspecialidad let i = index">
+            <th scope="row"> {{i+1}}</th>
+            <td>{{docEsp.especialidad.nombre}}</td>
+            <td>{{docEsp.creadoPor}}</td>
+            <td>{{docEsp.fechaCreacion | date:'MM-dd-yyyy' }}</td>
+            <td>{{docEsp.modificadoPor}}</td>
+            <td>{{docEsp.fechaModificacion | date:'MM-dd-yyyy'}}</td>
+            <td>&nbsp;</td>
+            <td>
+              <button class="btn btn-danger" (click)="delEspecialidad(docEsp)">Borrar
+              </button>
+          </tr>
+        </tbody>
+      </table>
+      <form  class="form Espe" #frmSelEspe="ngForm" (ngSubmit)="addEspecialidad(frmSelEspe)">
+        <div class="form-group row">
+          <div class="form-group col-md-6">
+            <select id="esp" name="esp" class="form-control" [(ngModel)]="selectedE" >
+              <option value="">---Seleccionar---</option>
+              <option *ngFor="let esp of especialidades" [ngValue]="esp">{{esp.nombre}}</option>
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <button type="submit" class="btn btn-primary">Adicionar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
